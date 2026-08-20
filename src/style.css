@@ -1,0 +1,358 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   星梦智能助手 — 全局科幻深蓝HUD主题样式
+   设计语言：深空背景 / 发光蓝边框 / 切角八边形容器 / 玻璃拟态辉光
+   ============================================================ */
+
+/* ---- 基础重置 ---- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background-color: #0a0e1a;
+  color: #b8d0e7;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ---- 全局扫描线效果（HUD风格） ---- */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  /* 细微的水平扫描线 */
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 212, 255, 0.008) 2px,
+    rgba(0, 212, 255, 0.008) 4px
+  );
+}
+
+/* ---- 自定义滚动条 ---- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0e1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a3a5c;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00d4ff;
+}
+
+/* ============================================================
+   通用HUD组件样式
+   ============================================================ */
+
+/* 切角八边形容器 — 通过clip-path实现 */
+@layer components {
+  .hud-panel {
+    @apply relative;
+    background: rgba(13, 17, 37, 0.75);
+    border: 1px solid rgba(0, 212, 255, 0.25);
+    /* 八边形切角：四个角各切掉约8px */
+    clip-path: polygon(
+      8px 0%,     calc(100% - 8px) 0%,
+      100% 8px,   100% calc(100% - 8px),
+      calc(100% - 8px) 100%, 8px 100%,
+      0% calc(100% - 8px), 0% 8px
+    );
+    /* 玻璃拟态辉光 */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+      0 0 10px rgba(0, 212, 255, 0.08),
+      inset 0 0 30px rgba(0, 212, 255, 0.03);
+    transition: box-shadow 0.4s ease, border-color 0.4s ease;
+  }
+
+  /* 面板hover增强辉光 */
+  .hud-panel-glow:hover {
+    border-color: rgba(0, 212, 255, 0.5);
+    box-shadow:
+      0 0 20px rgba(0, 212, 255, 0.15),
+      0 0 40px rgba(0, 212, 255, 0.05),
+      inset 0 0 40px rgba(0, 212, 255, 0.05);
+  }
+
+  /* HUD主按钮 */
+  .hud-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 36px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: #b8d0e7;
+    background: rgba(0, 212, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.4);
+    cursor: pointer;
+    /* 切角按钮 */
+    clip-path: polygon(
+      6px 0%,     calc(100% - 6px) 0%,
+      100% 6px,   100% calc(100% - 6px),
+      calc(100% - 6px) 100%, 6px 100%,
+      0% calc(100% - 6px), 0% 6px
+    );
+    transition: all 0.35s ease;
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+    user-select: none;
+  }
+
+  /* 按钮hover发光动画 */
+  .hud-btn:hover {
+    color: #ffffff;
+    background: rgba(0, 212, 255, 0.18);
+    border-color: rgba(0, 212, 255, 0.8);
+    box-shadow:
+      0 0 25px rgba(0, 212, 255, 0.5),
+      0 0 50px rgba(0, 212, 255, 0.25),
+      0 0 80px rgba(0, 212, 255, 0.1),
+      inset 0 0 25px rgba(0, 212, 255, 0.15);
+    text-shadow:
+      0 0 15px rgba(0, 212, 255, 0.8),
+      0 0 30px rgba(0, 212, 255, 0.4);
+    transform: translateY(-2px);
+  }
+
+  /* 按钮按下 */
+  .hud-btn:active {
+    transform: translateY(0px);
+    box-shadow:
+      0 0 15px rgba(0, 212, 255, 0.3),
+      0 0 30px rgba(0, 212, 255, 0.15);
+  }
+
+  /* HUD输入框 */
+  .hud-input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    color: #b8d0e7;
+    background: rgba(10, 14, 26, 0.7);
+    border: 1px solid rgba(0, 212, 255, 0.25);
+    border-radius: 0;
+    outline: none;
+    transition: all 0.3s ease;
+    /* 切角 */
+    clip-path: polygon(
+      4px 0%,     calc(100% - 4px) 0%,
+      100% 4px,   100% calc(100% - 4px),
+      calc(100% - 4px) 100%, 4px 100%,
+      0% calc(100% - 4px), 0% 4px
+    );
+  }
+
+  .hud-input:focus {
+    border-color: rgba(0, 212, 255, 0.7);
+    box-shadow:
+      0 0 15px rgba(0, 212, 255, 0.15),
+      inset 0 0 15px rgba(0, 212, 255, 0.05);
+  }
+
+  .hud-input::placeholder {
+    color: rgba(90, 122, 154, 0.6);
+  }
+
+  /* HUD下拉框 */
+  .hud-select {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    color: #b8d0e7;
+    background: rgba(10, 14, 26, 0.7);
+    border: 1px solid rgba(0, 212, 255, 0.25);
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    clip-path: polygon(
+      4px 0%,     calc(100% - 4px) 0%,
+      100% 4px,   100% calc(100% - 4px),
+      calc(100% - 4px) 100%, 4px 100%,
+      0% calc(100% - 4px), 0% 4px
+    );
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300d4ff' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  .hud-select:focus {
+    border-color: rgba(0, 212, 255, 0.7);
+    box-shadow:
+      0 0 15px rgba(0, 212, 255, 0.15),
+      inset 0 0 15px rgba(0, 212, 255, 0.05);
+  }
+
+  .hud-select option {
+    background: #0d1125;
+    color: #b8d0e7;
+  }
+
+  /* HUD文本域 */
+  .hud-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    color: #b8d0e7;
+    background: rgba(10, 14, 26, 0.7);
+    border: 1px solid rgba(0, 212, 255, 0.25);
+    outline: none;
+    resize: vertical;
+    min-height: 100px;
+    transition: all 0.3s ease;
+    clip-path: polygon(
+      4px 0%,     calc(100% - 4px) 0%,
+      100% 4px,   100% calc(100% - 4px),
+      calc(100% - 4px) 100%, 4px 100%,
+      0% calc(100% - 4px), 0% 4px
+    );
+  }
+
+  .hud-textarea:focus {
+    border-color: rgba(0, 212, 255, 0.7);
+    box-shadow:
+      0 0 15px rgba(0, 212, 255, 0.15),
+      inset 0 0 15px rgba(0, 212, 255, 0.05);
+  }
+
+  .hud-textarea::placeholder {
+    color: rgba(90, 122, 154, 0.6);
+  }
+
+  /* HUD标签 */
+  .hud-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #5a7a9a;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    text-shadow: 0 0 6px rgba(0, 212, 255, 0.2);
+  }
+
+  /* 必填星号 */
+  .hud-required::after {
+    content: ' *';
+    color: #ff6b9d;
+    text-shadow: 0 0 6px rgba(255, 107, 157, 0.5);
+  }
+
+  /* 表单错误提示 */
+  .hud-error {
+    font-size: 0.78rem;
+    color: #ff6b9d;
+    margin-top: 4px;
+    text-shadow: 0 0 6px rgba(255, 107, 157, 0.3);
+  }
+
+  /* 结果展示区域 */
+  .hud-result {
+    background: rgba(13, 17, 37, 0.6);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    clip-path: polygon(
+      6px 0%,     calc(100% - 6px) 0%,
+      100% 6px,   100% calc(100% - 6px),
+      calc(100% - 6px) 100%, 6px 100%,
+      0% calc(100% - 6px), 0% 6px
+    );
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* 返回按钮 */
+  .hud-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    font-size: 0.9rem;
+    color: #5a7a9a;
+    background: transparent;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    cursor: pointer;
+    clip-path: polygon(
+      4px 0%,     calc(100% - 4px) 0%,
+      100% 4px,   100% calc(100% - 4px),
+      calc(100% - 4px) 100%, 4px 100%,
+      0% calc(100% - 4px), 0% 4px
+    );
+    transition: all 0.3s ease;
+  }
+
+  .hud-back:hover {
+    color: #00d4ff;
+    border-color: rgba(0, 212, 255, 0.5);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+  }
+
+  /* 标题装饰线 */
+  .hud-title-line {
+    position: relative;
+    display: inline-block;
+  }
+  .hud-title-line::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 212, 255, 0.6),
+      rgba(123, 97, 255, 0.6),
+      transparent
+    );
+  }
+}
+
+/* ============================================================
+   表单行布局
+   ============================================================ */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ============================================================
+   星星粒子背景（首页使用） — CSS实现
+   ============================================================ */
+@keyframes twinkle1 {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.5); }
+}
+@keyframes twinkle2 {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  30%      { opacity: 0.15; transform: scale(0.8); }
+  70%      { opacity: 1;    transform: scale(1.3); }
+}
+@keyframes twinkle3 {
+  0%, 100% { opacity: 0.2; transform: scale(0.9); }
+  40%      { opacity: 0.9; transform: scale(1.4); }
+  80%      { opacity: 0.4; transform: scale(1); }
+}
